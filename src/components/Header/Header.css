@@ -1,0 +1,33 @@
+@reference "../../index.css";
+
+.header {
+    @apply flex items-center justify-between bg-white p-5 rounded-xl shadow-sm mb-8;
+}
+
+.header-title h2{
+    @apply text-2xl font-bold text-slate-800;
+}
+
+.header-title p {
+    @apply text-sm text-slate-500 mt-1;
+}
+
+.header-actions {
+    @apply flex items-center gap-6;
+}
+
+.notification-button {
+    @apply relative p-2 rounded-full text-slate-600 hover:bg-slate-100 cursor-pointer;
+}
+
+.user-profile {
+    @apply flex items-center gap-3;
+}
+
+.user-profile h3 {
+    @apply text-sm  font-semibold text-slate-800;
+}
+
+.user-profile p {
+    @apply text-xs text-slate-500;
+}

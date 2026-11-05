@@ -1,0 +1,82 @@
+@reference "../../index.css";
+
+
+.apply-leave-section {
+    @apply bg-white p-6 rounded-xl shadow-sm mt-8;
+}
+
+.apply-leave-section h2 {
+    @apply text-xl font-bold text-slate-800 mb-6;
+}
+
+
+.apply-leave-form {
+    @apply flex flex-col gap-5;
+}
+
+
+.apply-leave-form label {
+    @apply block text-sm font-medium text-slate-700 mb-2;
+}
+
+
+.apply-leave-form input,
+.apply-leave-form select,
+.apply-leave-form textarea {
+    @apply w-full border border-slate-300 rounded-lg p-3 text-sm text-slate-700 outline-none bg-white;
+}
+
+
+.apply-leave-form input:focus,
+.apply-leave-form select:focus,
+.apply-leave-form textarea:focus {
+    @apply border-blue-500 ring-2 ring-blue-100;
+}
+
+
+.form-group-leavetype,
+.form-group-startdate,
+.form-group-enddate,
+.form-group-reason {
+    @apply flex flex-col;
+}
+
+
+.form-group-leavetype p {
+    @apply text-sm text-slate-500 mt-2;
+}
+
+.apply-leave-form > p {
+    @apply text-sm font-semibold text-blue-700 bg-blue-50 p-3 rounded-lg;
+}
+
+
+.error-message {
+    @apply text-sm text-red-600 font-medium;
+}
+
+
+.apply-leave-form textarea {
+    @apply resize-y min-h-24;
+}
+
+
+.form-group-submit {
+    @apply flex justify-end;
+}
+
+
+.form-group-submit button {
+    @apply bg-blue-600 text-white px-6 py-3 rounded-lg font-medium cursor-pointer transition-colors hover:bg-blue-700;
+}
+
+
+@media (max-width: 640px) {
+    .apply-leave-section {
+        @apply p-4;
+    }
+
+    .form-group-submit button {
+        @apply w-full;
+    }
+}

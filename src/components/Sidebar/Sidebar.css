@@ -1,0 +1,19 @@
+@reference "../../index.css";
+
+.sidebar {
+    @apply w-64 min-h-screen bg-slate-900 text-white p-6;
+}
+
+.sidebar-title {
+    @apply text-2xl font-bold mb-10;
+}
+
+.sidebar-menu {
+    @apply list-none p-0 m-0 space-y-4;
+}
+
+.sidebar-menu li:hover {
+    @apply bg-slate-800 cursor-pointer;
+}
+
+

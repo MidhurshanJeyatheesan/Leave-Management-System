@@ -1,0 +1,34 @@
+
+@reference "../../index.css";
+
+.leave-request-section {
+  @apply bg-white p-6 rounded-xl shadow-sm mt-8;
+}
+
+.leave-request-heading {
+  @apply mb-6;
+}
+
+.leave-request-heading h2 {
+  @apply text-xl font-bold text-slate-800;
+}
+
+.leave-request-heading p {
+  @apply text-sm text-slate-500 mt-1;
+}
+
+.table-container {
+  @apply overflow-x-auto;
+}
+
+.table-container table {
+  @apply w-full text-left;
+}
+
+.table-container th {
+  @apply text-sm font-semibold text-slate-500 bg-slate-50 p-4;
+}
+
+.table-container td {
+  @apply text-sm text-slate-700 p-4 border-b border-slate-100;
+}

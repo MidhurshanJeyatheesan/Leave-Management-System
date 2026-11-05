@@ -1,0 +1,22 @@
+
+@reference "../../index.css";
+
+.stat-card {
+  @apply bg-white p-6 rounded-xl shadow-sm;
+}
+
+.stat-card-header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.stat-card-header h3 {
+  @apply text-sm font-medium text-slate-500;
+}
+
+.stat-card h2 {
+  @apply text-3xl font-bold text-slate-800;
+}
+
+.stat-card p {
+  @apply text-sm text-slate-500 mt-1;
+}
