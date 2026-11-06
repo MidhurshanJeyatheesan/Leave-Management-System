@@ -1,11 +1,12 @@
 import './LeaveRequestTable.css';
-import type { LeaveRequest } from '../../types/leave';
+import type { LeaveRequest, LeaveStatus } from '../../types/leave';
 
 interface LeaveRequestTableProps {
     leaveRequests: LeaveRequest[];
+    onUpdateStatus: (id:number, status: LeaveStatus) => void;
 }
 
-function LeaveRequestTable({ leaveRequests }: LeaveRequestTableProps) {
+function LeaveRequestTable({ leaveRequests, onUpdateStatus }: LeaveRequestTableProps) {
     return (
         <div className="leave-request-section">
             <div className="leave-request-heading">
@@ -24,6 +25,7 @@ function LeaveRequestTable({ leaveRequests }: LeaveRequestTableProps) {
                             <th>Days</th>
                             <th>Reason</th>
                             <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
 
@@ -38,6 +40,18 @@ function LeaveRequestTable({ leaveRequests }: LeaveRequestTableProps) {
                                 <td>{request.days}</td>
                                 <td>{request.reason}</td>
                                 <td>{request.status}</td>
+                                <td>
+                                {request.status === 'Pending' ? (
+                                    <>
+                                        <button onClick={() => onUpdateStatus(request.id, 'Approved')}>Approve</button>
+                                        <button onClick={() => onUpdateStatus(request.id, 'Rejected')}>Reject</button>
+                                        
+                                    </>):
+                                (
+                                    <span>Completed</span>
+                                )
+                                }
+                                </td>
                             </tr>
                             ))
                         }
