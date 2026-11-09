@@ -31,7 +31,13 @@ function LeaveRequestTable({ leaveRequests, onUpdateStatus, currentRole }: Leave
                     </thead>
 
                     <tbody>
-                        {
+                        {leaveRequests.length === 0 ? (
+                            <tr>
+                                <td colSpan={8} className="text-center py-8 text-slate-500">
+                                    No leave requests found.
+                                </td>
+                            </tr>
+                            ) : (
                             leaveRequests.map((request) => (
                             <tr key={request.id}>
                                 <td>{request.employeeName}</td>
@@ -62,7 +68,7 @@ function LeaveRequestTable({ leaveRequests, onUpdateStatus, currentRole }: Leave
                                     
                                 </td>
                             </tr>
-                            ))
+                            )))
                         }
                     </tbody>
                 </table>

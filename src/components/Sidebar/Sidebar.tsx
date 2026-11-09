@@ -28,7 +28,7 @@ function Sidebar({ menuItems, onMenuClick }: SidebarProps) {
                             return(
                                 <li key={item.label} onClick= { () => onMenuClick(item.label) }>
                                     <Icon size={20} />
-                                    <span>{item.label}</span>                                    
+                                    <span className="hidden md:inline">{item.label}</span>                                    
                                 </li>
                             );
                         })

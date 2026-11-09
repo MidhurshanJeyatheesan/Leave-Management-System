@@ -4,6 +4,8 @@ import { useState,useEffect } from 'react'
 import Dashboard from './pages/Dashboard';
 import ApplyLeavePage from './pages/ApplyLeavePage';
 import { calculateRemainingLeaves as getLeaveBalance } from './utils/leaveUtils';
+import MyLeaveRequests from './pages/MyLeaveRequests';
+import LeaveHistory from './pages/LeaveHistory';
 
 import {
   LayoutDashboard,
@@ -68,6 +70,11 @@ function App(){
         return;
       }
 
+      if (selectedRequest.employeeName === currentEmployee) {
+        alert('You cannot approve or reject your own leave request.');
+      return;
+      }
+
       if( status === 'Approved' ) {
         const remaingBalance = calculateRemainingLeaves(selectedRequest.leaveType, selectedRequest.employeeName);
 
@@ -102,6 +109,14 @@ function App(){
             (request) => request.employeeName === currentEmployee
         );
 
+    const myLeaveRequests = leaveRequests.filter(
+      (request) => request.employeeName === currentEmployee
+    );
+
+    const leaveHistoryRequests = displayedLeaveRequests.filter(
+      (request) => request.status !== 'Pending'
+    );
+
     return(
       <div className="flex min-h-screen">
 
@@ -110,14 +125,14 @@ function App(){
         onMenuClick={setActivePage}
         />
 
-        <main className="flex-1 bg-slate-100 p-8">
+        <main className="flex-1 min-w-0 bg-slate-100 p-4 md:p-8">
 
-        <div className="mb-6 flex justify-end">
+        <div className="mb-6 flex flex-col sm:flex-row sm:justify-end gap-3">
             <select value={currentRole} 
             onChange={(event) => 
               setCurrentRole(event.target.value as 'Employee' | 'Manager')
             }
-              className="border rounded-lg p-2 bg-white"
+              className="border rounded-lg p-2 bg-white "
             >
                 <option value="Employee">Employee</option>
                 <option value="Manager">Manager</option>
@@ -139,6 +154,7 @@ function App(){
               onUpdateStatus={updateLeaveStatus}
               currentRole={currentRole}
               calculateRemainingLeaves={calculateRemainingLeaves}
+              currentEmployee={currentEmployee}
           />
         )}
 
@@ -147,6 +163,20 @@ function App(){
               onAddLeaveRequest={addLeaveRequest}
               getRemainingBalance={calculateRemainingLeaves}
               currentEmployee={currentEmployee}
+          />
+        )}
+
+        {activePage === 'My Leave Request' && (
+          <MyLeaveRequests
+              leaveRequests={myLeaveRequests}
+              onUpdateStatus={updateLeaveStatus}
+          />
+        )}
+
+        {activePage === 'Leave History' && (
+          <LeaveHistory
+              leaveRequests={leaveHistoryRequests}
+              onUpdateStatus={updateLeaveStatus}
           />
         )}
 
