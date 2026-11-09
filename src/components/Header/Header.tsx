@@ -1,7 +1,12 @@
 import {Bell,UserCircle } from 'lucide-react';
 import './Header.css';
 
-function Header(){
+interface HeaderProps {
+    currentEmployee: string;
+    currentRole: 'Employee' | 'Manager';
+}
+
+function Header({ currentEmployee, currentRole }: HeaderProps){
     return(
         <header className="header">
             <div className="header-title">
@@ -18,8 +23,8 @@ function Header(){
                     <UserCircle size={20} />
 
                     <div>
-                        <h3>John Doe</h3>
-                        <p>Employee</p>
+                        <h3>{currentEmployee}</h3>
+                        <p>{currentRole}</p>
                     </div>
                 </div>
             </div>

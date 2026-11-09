@@ -15,13 +15,15 @@ interface DashboardProps {
     onUpdateStatus: (id: number, status: LeaveStatus) => void;
     currentRole: 'Employee' | 'Manager';
     calculateRemainingLeaves: (leaveType: string) => number;
+    currentEmployee: string;
 }
 
 function Dashboard({
     leaveRequests,
     onUpdateStatus,
     currentRole,
-    calculateRemainingLeaves
+    calculateRemainingLeaves,
+    currentEmployee,
 }: DashboardProps) {
 
     return (
@@ -30,7 +32,10 @@ function Dashboard({
                 Leave Management Dashboard
             </h1>
 
-            <Header />
+            <Header 
+                currentEmployee={currentEmployee}
+                currentRole={currentRole}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
