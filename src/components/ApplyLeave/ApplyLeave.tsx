@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
 import type { LeaveRequest } from '../../types/leave';
 import './ApplyLeave.css';
 import { calculateLeaveDays } from '../../utils/dateUtils';
