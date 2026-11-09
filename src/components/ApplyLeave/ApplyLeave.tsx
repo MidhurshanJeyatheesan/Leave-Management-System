@@ -1,36 +1,30 @@
 import { useState, type FormEvent } from 'react';
 import type { LeaveRequest } from '../../types/leave';
 import './ApplyLeave.css';
+import { calculateLeaveDays } from '../../utils/dateUtils';
+
 interface ApplyLeaveProps {
     onAddLeaveRequest: (newRequest: LeaveRequest) => void;
+    getRemainingBalance : (leaveType: string) => number;
+    currentEmployee: string;
 }
 
 
-function ApplyLeave( {onAddLeaveRequest } : ApplyLeaveProps) {
+function ApplyLeave( {onAddLeaveRequest, getRemainingBalance, currentEmployee } : ApplyLeaveProps) {
+    
     const [leaveType,setLeaveType]=useState('annual');
     const [startDate,setStartDate]=useState('');
     const [endDate,setEndDate]=useState('');
     const [reason,setReason]=useState('');
 
-    const calculateLeaveDays = (start:string, end:string) => {
-        if(!start || !end){
-            return 0;
-        }
-
-        const startDate= new Date(`${start}T00:00:00`);
-        const endDate= new Date(`${end}T00:00:00`);
-
-        const difference= endDate.getTime() - startDate.getTime();
-
-        return Math.floor(difference/(1000*3600*24)) + 1;
-        
-    }
 
     const dateError = startDate && endDate && endDate < startDate
     ? 'End date cannot be earlier than start date'
     : '';
 
     const leaveDays=calculateLeaveDays(startDate,endDate);
+    const remainingBalance=getRemainingBalance(leaveType);
+
 
     const handleSubmit=(event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -45,6 +39,11 @@ function ApplyLeave( {onAddLeaveRequest } : ApplyLeaveProps) {
             return;
         }
 
+        if(leaveDays > remainingBalance){
+            alert(`you only have ${remainingBalance} days remaining for this leave typr.`);
+            return;
+        }
+
         if(!reason.trim()){
             alert('Please provide a reason for leave');
             return;
@@ -52,7 +51,7 @@ function ApplyLeave( {onAddLeaveRequest } : ApplyLeaveProps) {
 
         const newLeaveRequest: LeaveRequest = {
             id: Date.now(),
-            employeeName: 'John Doe',
+            employeeName: currentEmployee,
             leaveType: leaveType,
             startDate: startDate,
             endDate: endDate,

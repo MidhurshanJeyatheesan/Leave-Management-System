@@ -1,20 +1,17 @@
 import Sidebar from './components/Sidebar/Sidebar';
-import Header from './components/Header/Header';
-import LeaveRequestTable from './components/LeaveRequestTable/LeaveRequestTable';
-import ApplyLeave from './components/ApplyLeave/ApplyLeave';
 import type { LeaveRequest, LeaveStatus } from './types/leave';
-import { useState,useEffect } from 'react';
+import { useState,useEffect } from 'react'
+import Dashboard from './pages/Dashboard';
+import ApplyLeavePage from './pages/ApplyLeavePage';
+import { calculateRemainingLeaves as getLeaveBalance } from './utils/leaveUtils';
 
 import {
   LayoutDashboard,
   CalendarDays,
   ClipboardList,
-  History,
-  Coffee,
-  HeartPulse
+  History
 } from 'lucide-react';
 
-import StatCard from './components/StatCard/StatCard';
 
 const menuItems = [
   {
@@ -42,6 +39,8 @@ function App(){
      });
 
     const [activePage,setActivePage] = useState('Dashboard');
+    const [currentRole, setCurrentRole] = useState<'Employee' | 'Manager'>('Employee');
+    const [currentEmployee, setCurrentEmployee] = useState('John Doe');
 
     useEffect( () => {
       localStorage.setItem('leaveRequests', JSON.stringify(leaveRequests));
@@ -56,28 +55,52 @@ function App(){
     }
 
     const updateLeaveStatus = (id: number, status: LeaveStatus) => {
-      setLeaveRequests((previousRequests) =>
+
+      if (currentRole !== 'Manager') {
+           alert('Only managers can update leave request status.');
+           return;
+      }
+      const selectedRequest= leaveRequests.find(
+        (request) => request.id === id
+      );
+
+      if(!selectedRequest){
+        return;
+      }
+
+      if( status === 'Approved' ) {
+        const remaingBalance = calculateRemainingLeaves(selectedRequest.leaveType, selectedRequest.employeeName);
+
+        if(selectedRequest.days > remaingBalance){
+          alert( `cannot approve! only ${remaingBalance} days remaining.`);
+          return;
+        }
+      }
+
+      setLeaveRequests((previousRequests) => 
         previousRequests.map((request) =>
-          request.id === id ? { ...request,status} : request)
+          request.id === id ? { ...request, status } : request
+        )
       );
     }
 
-    const calculateRemainingLeaves = (leaveType: string) =>{
-      
-      const approvedLeaves = leaveRequests.filter(
-        (request) => 
-          request.leaveType === leaveType &&
-        request.status === 'Approved'
-      );
+    const calculateRemainingLeaves = (
+      leaveType: string,
+      employeeName: string = currentEmployee
+      ) => {
+          return getLeaveBalance(
+          leaveRequests,
+          leaveType,
+          employeeName
+          );
+    };
 
-      const totaltotalApprovedDays = approvedLeaves.reduce(
-        (total,request) => total + request.days,0
-      );
-
-      const generalCount = leaveType === 'annual' ? 14 : 7;
-      return generalCount - totaltotalApprovedDays;
-    }
-
+    const displayedLeaveRequests =
+      currentRole === 'Manager'
+        ? leaveRequests
+        : leaveRequests.filter(
+            (request) => request.employeeName === currentEmployee
+        );
 
     return(
       <div className="flex min-h-screen">
@@ -89,48 +112,43 @@ function App(){
 
         <main className="flex-1 bg-slate-100 p-8">
 
-        { activePage === 'Dashboard' && (<>
+        <div className="mb-6 flex justify-end">
+            <select value={currentRole} 
+            onChange={(event) => 
+              setCurrentRole(event.target.value as 'Employee' | 'Manager')
+            }
+              className="border rounded-lg p-2 bg-white"
+            >
+                <option value="Employee">Employee</option>
+                <option value="Manager">Manager</option>
+            </select>
 
-          <h1 className="text-3xl font-bold text-slate-800 mb-6">
-            Leave Management Dashboard
-          </h1>
+            <select value={currentEmployee}
+                onChange={(event) => setCurrentEmployee(event.target.value)}
+                className="border rounded-lg p-2 bg-white"
+            >
+                <option value="John Doe">John Doe</option>
+                <option value="Jane Smith">Jane Smith</option>
+            </select>
 
-          <Header />
+        </div> 
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatCard 
-                title= "Anual Leave"
-                days= {calculateRemainingLeaves('annual')}
-                icon= {CalendarDays}
-              />
-
-            <StatCard 
-                title= "Casual Leave"
-                days= {calculateRemainingLeaves('casual')}
-                icon= {Coffee}
-              />
-
-            <StatCard 
-                title= "Medical Leave"
-                days= {calculateRemainingLeaves('medical')}
-              icon= {HeartPulse}
-              />
-          </div>
-
-        <LeaveRequestTable 
-        leaveRequests={leaveRequests} 
-        onUpdateStatus={updateLeaveStatus}
-        />
-
-        </>
+        {activePage === 'Dashboard' && (
+          <Dashboard
+              leaveRequests={displayedLeaveRequests}
+              onUpdateStatus={updateLeaveStatus}
+              currentRole={currentRole}
+              calculateRemainingLeaves={calculateRemainingLeaves}
+          />
         )}
 
-        { activePage=== 'Apply Leave' && (<>
-
-          <ApplyLeave onAddLeaveRequest= { addLeaveRequest } />
-          
-        </>
-      )}
+        {activePage === 'Apply Leave' && (
+          <ApplyLeavePage
+              onAddLeaveRequest={addLeaveRequest}
+              getRemainingBalance={calculateRemainingLeaves}
+              currentEmployee={currentEmployee}
+          />
+        )}
 
         </main>
     </div>
