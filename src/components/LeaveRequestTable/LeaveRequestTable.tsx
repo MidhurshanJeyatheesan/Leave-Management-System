@@ -4,9 +4,10 @@ import type { LeaveRequest, LeaveStatus } from '../../types/leave';
 interface LeaveRequestTableProps {
     leaveRequests: LeaveRequest[];
     onUpdateStatus: (id:number, status: LeaveStatus) => void;
+    currentRole: 'Employee' | 'Manager';
 }
 
-function LeaveRequestTable({ leaveRequests, onUpdateStatus }: LeaveRequestTableProps) {
+function LeaveRequestTable({ leaveRequests, onUpdateStatus, currentRole }: LeaveRequestTableProps) {
     return (
         <div className="leave-request-section">
             <div className="leave-request-heading">
@@ -41,16 +42,24 @@ function LeaveRequestTable({ leaveRequests, onUpdateStatus }: LeaveRequestTableP
                                 <td>{request.reason}</td>
                                 <td>{request.status}</td>
                                 <td>
-                                {request.status === 'Pending' ? (
+                                {currentRole === 'Manager' ? (
+                                     request.status === 'Pending' ? (
                                     <>
-                                        <button onClick={() => onUpdateStatus(request.id, 'Approved')}>Approve</button>
-                                        <button onClick={() => onUpdateStatus(request.id, 'Rejected')}>Reject</button>
-                                        
-                                    </>):
-                                (
-                                    <span>Completed</span>
-                                )
-                                }
+                                        <button onClick={() => onUpdateStatus(request.id, 'Approved')}>
+                                            Approve
+                                        </button>
+
+                                        <button onClick={() => onUpdateStatus(request.id, 'Rejected')}>
+                                            Reject
+                                        </button>
+                                    </>
+                                    ) : (
+                                        <span>Completed</span>
+                                    )
+                                    ) : (
+                                        <span>View Only</span>
+                                    )}
+                                    
                                 </td>
                             </tr>
                             ))
